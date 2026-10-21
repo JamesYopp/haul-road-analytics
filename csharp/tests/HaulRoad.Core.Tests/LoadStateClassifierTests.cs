@@ -20,4 +20,16 @@ public class LoadStateClassifierTests
 
         Assert.Equal(expected, result);
     }
+
+    [Theory]
+    [InlineData(-1.0, 220.0)]
+    [InlineData(double.NaN, 220.0)]
+    [InlineData(100.0, 0.0)]
+    [InlineData(100.0, -220.0)]
+    [InlineData(100.0, double.NaN)]
+    public void Classify_Throws_WhenInputsAreInvalid(double payloadTonnes, double ratedCapacityTonnes)
+    {
+        Assert.Throws<ArgumentOutOfRangeException>(
+            () => LoadStateClassifier.Classify(payloadTonnes, ratedCapacityTonnes));
+    }
 }
