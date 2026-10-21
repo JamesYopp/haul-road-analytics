@@ -2,30 +2,32 @@ namespace HaulRoad.Core;
 
 public static class LoadStateClassifier
 {
+    // Business rules from Field Operations: share of rated capacity.
+    private const double EmptyBelowRatio = 0.10;
+    private const double OverloadedAboveRatio = 1.05;
+
     public static LoadState Classify(double payloadTonnes, double ratedCapacityTonnes)
     {
-        if (!double.IsFinite(payloadTonnes) || payloadTonnes < 0)
-        {
-            throw new ArgumentOutOfRangeException(nameof(payloadTonnes), payloadTonnes, "Payload must be a finite, non-negative number.");
-        }
-
-        if (!double.IsFinite(ratedCapacityTonnes) || ratedCapacityTonnes <= 0)
-        {
-            throw new ArgumentOutOfRangeException(nameof(ratedCapacityTonnes), ratedCapacityTonnes, "Rated capacity must be a finite, positive number.");
-        }
+        RequireValid(payloadTonnes, nameof(payloadTonnes), allowZero: true);
+        RequireValid(ratedCapacityTonnes, nameof(ratedCapacityTonnes), allowZero: false);
 
         var ratio = payloadTonnes / ratedCapacityTonnes;
 
-        if (ratio < 0.10)
+        if (ratio < EmptyBelowRatio)
         {
             return LoadState.Empty;
         }
 
-        if (ratio <= 1.05)
-        {
-            return LoadState.Loaded;
-        }
+        return ratio <= OverloadedAboveRatio ? LoadState.Loaded : LoadState.Overloaded;
+    }
 
-        return LoadState.Overloaded;
+    private static void RequireValid(double value, string parameterName, bool allowZero)
+    {
+        var belowMinimum = allowZero ? value < 0 : value <= 0;
+
+        if (!double.IsFinite(value) || belowMinimum)
+        {
+            throw new ArgumentOutOfRangeException(parameterName, value, "Value is not valid for this reading.");
+        }
     }
 }
