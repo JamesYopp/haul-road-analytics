@@ -1,0 +1,14 @@
+bin/
+obj/
+.vs/
+.idea/
+*.user
+TestResults/
+
+# Team skills: a nested git repo (a clone of the AI-Skills repo). Commit skill changes from inside it.
+.agents/
+.claude/
+.gemini/
+
+# macOS
+.DS_Store
