@@ -11,4 +11,14 @@ public static class UnitConverter
 
         return unit == PayloadUnit.ShortTons ? value * 0.90718474 : value;
     }
+
+    public static double ToKilometresPerHour(double value, SpeedUnit unit)
+    {
+        throw new NotImplementedException();
+    }
+
+    public static double ToLitres(double value, FuelUnit unit)
+    {
+        throw new NotImplementedException();
+    }
 }
