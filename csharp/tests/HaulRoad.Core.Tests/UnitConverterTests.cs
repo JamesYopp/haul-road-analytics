@@ -23,4 +23,14 @@ public class UnitConverterTests
 
         Assert.Equal(expectedTonnes, result, precision: 6);
     }
+
+    [Theory]
+    [InlineData(-1.0)]
+    [InlineData(double.NaN)]
+    [InlineData(double.PositiveInfinity)]
+    public void ToTonnes_Throws_WhenReadingIsInvalid(double invalidValue)
+    {
+        Assert.Throws<ArgumentOutOfRangeException>(
+            () => UnitConverter.ToTonnes(invalidValue, PayloadUnit.Tonnes));
+    }
 }
