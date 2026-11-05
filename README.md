@@ -26,10 +26,13 @@ For later blocks: `git fetch --tags` then `git switch -c block2-work block2-star
 | `block1-start` | Solution file, core project, PRDs. No test project yet |
 | `block1-setup-done` | Checkpoint: test project exists with one green smoke test |
 | `block1-solution` | Reference solution built as red, green, refactor commits |
+| `block2-start` | Block 1 solution plus the Block 2 PRD, the reading repository interface, a data project with the database schema, an integration test project, and a sentinel decoder |
+| `block2-db-ready` | Checkpoint: one green smoke test proves the in-memory database works |
+| `block2-solution` | Reference solution built as red, green, refactor commits |
 
-Tags starting `block1-demo` belong to the facilitator's live demo. You can ignore them.
+Tags starting `block1-demo` or `block2-demo` belong to the facilitator's live demos. You can ignore them.
 
-Block 2 to 4 tags are added as those blocks are built.
+Block 3 and 4 tags are added as those blocks are built.
 
 ## Stuck?
 
@@ -44,7 +47,12 @@ The solution is one known-good answer, not the only one. AI output varies.
 ```
 prd/      base PRD and one feature PRD per block
 docs/     language cards (C#, Python, JavaScript, Playwright)
-csharp/   HaulRoad.sln, src/ (production code), tests/ (test projects)
+          docs/block2/  Block 2 lab guide and Monday card (from Block 2)
+csharp/   HaulRoad.sln
+  src/HaulRoad.Core                       domain logic, no database (from Block 2)
+  src/HaulRoad.Data                       database adapters, SQLite for practice (from Block 2)
+  tests/HaulRoad.Core.Tests               unit tests
+  tests/HaulRoad.Data.IntegrationTests    integration tests (from Block 2)
 ```
 
 ## Your skills

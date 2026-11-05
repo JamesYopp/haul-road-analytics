@@ -4,5 +4,6 @@ public enum LoadState
 {
     Empty,
     Loaded,
-    Overloaded
+    Overloaded,
+    Unknown
 }

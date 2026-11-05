@@ -13,5 +13,5 @@ A library, later a service, that ingests truck readings, normalizes them, splits
 
 ## Features (delivered one per block)
 1. Normalize units and classify load state (Block 1)
-2. Fuel burn per segment from a telemetry feed (Block 2)
+2. Summarize stored payload readings, excluding unavailable data (Block 2)
 3. Flag segments above a grade threshold, in existing code (Block 3)
