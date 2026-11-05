@@ -28,7 +28,8 @@ public sealed class SqliteReadingRepository : IReadingRepository
         using var command = _connection.CreateCommand();
         command.CommandText =
             "SELECT truck_id, recorded_at_utc, raw_payload FROM readings " +
-            "WHERE truck_id = $truck AND recorded_at_utc >= $from AND recorded_at_utc < $to";
+            "WHERE truck_id = $truck AND recorded_at_utc >= $from AND recorded_at_utc < $to " +
+            "ORDER BY recorded_at_utc, id";
         command.Parameters.AddWithValue("$truck", truckId);
         command.Parameters.AddWithValue("$from", from.ToUnixTimeMilliseconds());
         command.Parameters.AddWithValue("$to", to.ToUnixTimeMilliseconds());
