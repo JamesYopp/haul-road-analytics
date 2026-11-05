@@ -11,7 +11,8 @@ public sealed class PayloadStatsService
 
     public PayloadSummary Summarize(string truckId, DateTimeOffset from, DateTimeOffset to)
     {
-        _ = _readings.GetBetween(truckId, from, to);
-        return new PayloadSummary(null, 0, 0);
+        var readings = _readings.GetBetween(truckId, from, to);
+
+        return new PayloadSummary(readings.Average(r => (double)r.RawPayload), readings.Count, 0);
     }
 }
