@@ -27,6 +27,8 @@ public sealed class PayloadStatsService
             }
         }
 
-        return new PayloadSummary(usable.Average(), usable.Count, unavailable);
+        double? average = usable.Count == 0 ? null : usable.Average();
+
+        return new PayloadSummary(average, usable.Count, unavailable);
     }
 }
