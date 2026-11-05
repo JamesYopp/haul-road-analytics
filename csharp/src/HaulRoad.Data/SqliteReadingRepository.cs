@@ -26,7 +26,9 @@ public sealed class SqliteReadingRepository : IReadingRepository
     public IReadOnlyList<TelemetryReading> GetBetween(string truckId, DateTimeOffset from, DateTimeOffset to)
     {
         using var command = _connection.CreateCommand();
-        command.CommandText = "SELECT truck_id, recorded_at_utc, raw_payload FROM readings";
+        command.CommandText =
+            "SELECT truck_id, recorded_at_utc, raw_payload FROM readings WHERE truck_id = $truck";
+        command.Parameters.AddWithValue("$truck", truckId);
 
         using var reader = command.ExecuteReader();
         var results = new List<TelemetryReading>();
