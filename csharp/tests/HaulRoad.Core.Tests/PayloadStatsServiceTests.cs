@@ -37,4 +37,31 @@ public class PayloadStatsServiceTests
         Assert.Equal(2, summary.UsedCount);
         Assert.Equal(1, summary.UnavailableCount);
     }
+
+    [Fact]
+    public void Summarize_ReportsNoAverage_WhenEveryReadingIsUnavailable()
+    {
+        var repository = new FakeReadingRepository();
+        repository.Add(new TelemetryReading("T-12", ShiftStart.AddMinutes(1), 0xFFFF));
+        repository.Add(new TelemetryReading("T-12", ShiftStart.AddMinutes(2), 0xFFFF));
+        var service = new PayloadStatsService(repository);
+
+        var summary = service.Summarize("T-12", ShiftStart, ShiftEnd);
+
+        Assert.Null(summary.AverageTonnes);
+        Assert.Equal(0, summary.UsedCount);
+        Assert.Equal(2, summary.UnavailableCount);
+    }
+
+    [Fact]
+    public void Summarize_ReportsNoAverage_WhenThereAreNoReadings()
+    {
+        var service = new PayloadStatsService(new FakeReadingRepository());
+
+        var summary = service.Summarize("T-12", ShiftStart, ShiftEnd);
+
+        Assert.Null(summary.AverageTonnes);
+        Assert.Equal(0, summary.UsedCount);
+        Assert.Equal(0, summary.UnavailableCount);
+    }
 }
