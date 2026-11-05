@@ -17,7 +17,13 @@ public sealed class SustainedLoadTracker
 
     public void Observe(LoadState observed)
     {
-        if (_candidate is null)
+        if (observed == Current)
+        {
+            _candidate = null;
+            return;
+        }
+
+        if (_candidate != observed)
         {
             _candidate = observed;
             _candidateSince = _clock.GetUtcNow();
@@ -26,6 +32,7 @@ public sealed class SustainedLoadTracker
         if (_clock.GetUtcNow() - _candidateSince >= _window)
         {
             Current = observed;
+            _candidate = null;
         }
     }
 }
