@@ -21,4 +21,19 @@ public class SustainedLoadTrackerTests
 
         Assert.Equal(LoadState.Loaded, tracker.Current);
     }
+
+    [Fact]
+    public void Current_StaysEmpty_WhenLoadedIsInterruptedBeforeTheWindowEnds()
+    {
+        var clock = new FakeTimeProvider(Start);
+        var tracker = new SustainedLoadTracker(Window, clock);
+
+        tracker.Observe(LoadState.Loaded);
+        clock.Advance(TimeSpan.FromSeconds(5));
+        tracker.Observe(LoadState.Empty);
+        clock.Advance(TimeSpan.FromSeconds(8));
+        tracker.Observe(LoadState.Loaded);
+
+        Assert.Equal(LoadState.Empty, tracker.Current);
+    }
 }
