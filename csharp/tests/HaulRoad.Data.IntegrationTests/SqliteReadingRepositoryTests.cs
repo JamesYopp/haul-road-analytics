@@ -80,4 +80,18 @@ public sealed class SqliteReadingRepositoryTests : IDisposable
 
         Assert.Equal(new[] { earlier, later }, result);
     }
+
+    [Theory]
+    [InlineData((ushort)0)]
+    [InlineData((ushort)0xFFFE)]
+    [InlineData((ushort)0xFFFF)]
+    public void GetBetween_ReturnsTheRawPayloadUnchanged_IncludingTheNotAvailableSentinel(ushort rawPayload)
+    {
+        var reading = new TelemetryReading("T-12", Noon, rawPayload);
+        _repository.Add(reading);
+
+        var result = _repository.GetBetween("T-12", Noon.AddHours(-1), Noon.AddHours(1));
+
+        Assert.Equal(new[] { reading }, result);
+    }
 }
