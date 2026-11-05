@@ -33,4 +33,15 @@ public sealed class SqliteReadingRepositoryTests : IDisposable
 
         Assert.Equal(new[] { reading }, result);
     }
+
+    [Fact]
+    public void GetBetween_ReturnsOnlyTheRequestedTrucksReadings()
+    {
+        _repository.Add(new TelemetryReading("T-12", Noon, 180));
+        _repository.Add(new TelemetryReading("T-14", Noon, 90));
+
+        var result = _repository.GetBetween("T-12", Noon.AddHours(-1), Noon.AddHours(1));
+
+        Assert.Equal(new[] { new TelemetryReading("T-12", Noon, 180) }, result);
+    }
 }
