@@ -3,12 +3,14 @@ namespace HaulRoad.Core;
 public sealed class SustainedLoadTracker
 {
     private readonly TimeSpan _window;
+    private readonly TimeProvider _clock;
     private LoadState? _candidate;
-    private DateTime _candidateSince;
+    private DateTimeOffset _candidateSince;
 
-    public SustainedLoadTracker(TimeSpan window)
+    public SustainedLoadTracker(TimeSpan window, TimeProvider clock)
     {
         _window = window;
+        _clock = clock;
     }
 
     public LoadState Current { get; private set; } = LoadState.Empty;
@@ -18,10 +20,10 @@ public sealed class SustainedLoadTracker
         if (_candidate is null)
         {
             _candidate = observed;
-            _candidateSince = DateTime.UtcNow;
+            _candidateSince = _clock.GetUtcNow();
         }
 
-        if (DateTime.UtcNow - _candidateSince >= _window)
+        if (_clock.GetUtcNow() - _candidateSince >= _window)
         {
             Current = observed;
         }
