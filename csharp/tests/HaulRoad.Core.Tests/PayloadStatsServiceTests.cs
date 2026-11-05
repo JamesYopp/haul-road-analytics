@@ -1,4 +1,5 @@
 using HaulRoad.Core;
+using NSubstitute;
 using Xunit;
 
 namespace HaulRoad.Core.Tests;
@@ -66,5 +67,20 @@ public class PayloadStatsServiceTests
         Assert.Null(summary.AverageTonnes);
         Assert.Equal(0, summary.UsedCount);
         Assert.Equal(0, summary.UnavailableCount);
+    }
+
+    [Fact]
+    public void Summarize_UsesWhatTheRepositoryReturnsForTheRequestedTruckAndRange()
+    {
+        // A stub: it answers only when asked for this truck and this range. The test checks the outcome, not a call count.
+        IReadOnlyList<TelemetryReading> stored = new[] { ReadingAtMinute(1, 120) };
+        var repository = Substitute.For<IReadingRepository>();
+        repository.GetBetween("T-12", ShiftStart, ShiftEnd).Returns(stored);
+        var service = new PayloadStatsService(repository);
+
+        var summary = service.Summarize("T-12", ShiftStart, ShiftEnd);
+
+        Assert.Equal((double?)120.0, summary.AverageTonnes);
+        Assert.Equal(1, summary.UsedCount);
     }
 }
